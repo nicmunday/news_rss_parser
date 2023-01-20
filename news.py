@@ -72,5 +72,5 @@ if(len(stories)) > 0:
 else:
     print("                    There Are Currently No Stories To Display\n\n")
 
-with open("/home/nic/bin/imports/text_files/newsaccessed.txt", "w") as writer:
+with open("imports/text_files/newsaccessed.txt", "w") as writer:
     writer.write(str(datetime.datetime.now()))

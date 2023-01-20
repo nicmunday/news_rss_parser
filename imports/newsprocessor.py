@@ -67,15 +67,26 @@ class NewsProcessor:
         return resultlist
 
     def new_stories(self, storylist):
+        last_accessed = False
         if not storylist:
             storylist = self.all_stories()
-        with open("/home/nic/bin/imports/text_files/newsaccessed.txt") as reader:
-            last_accessed = datetime.datetime.fromisoformat(reader.readline().strip())
-        resultlist = []
-        for story in storylist:
-            if story['pub'] > last_accessed:
-                resultlist.append(story)
-        return resultlist
+
+        try:
+            with open("imports/text_files/newsaccessed.txt") as reader:
+                last_accessed = datetime.datetime.fromisoformat(reader.readline().strip())
+
+        except FileNotFoundError:
+            with open("imports/text_files/newsaccessed.txt", "w") as writer:
+                writer.write(str(datetime.datetime.now()))
+
+        if not last_accessed:
+            return storylist
+        else:
+            resultlist = []
+            for story in storylist:
+                if story['pub'] > last_accessed:
+                    resultlist.append(story)
+            return resultlist
 
     def today_stories(self, storylist):
         if not storylist:
@@ -90,17 +101,3 @@ class NewsProcessor:
         today = datetime.datetime.now()
         today = today.replace(hour=0, minute=0, second=0, microsecond=0)
         return self.stories_before(today, storylist)
-
-
-
-
-
-# stories_in_range
-# all_stories
-# stories_before
-# stories_after
-# new_stories
-# today_stories
-#not_today_stories
-#newsy = NewsProcessor()
-#print(len(newsy.stories_before(datetime.datetime.now()-datetime.timedelta(hours=10), [])))
